@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0E2A1E">
+<title>GREEN SHIFT — Mỗi lựa chọn, một thay đổi</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🌿</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============ GREEN SHIFT — CORE ============ */
+:root{
+  --dark:#0E2A1E; --deep:#0B2418; --grn:#4CAF6D; --ivo:#F6F4EC; --sand:#C9B79C;
+  --navc:#F6F4EC;
+  --fd:'Anton','Be Vietnam Pro',sans-serif;      /* display — chỉ cho chữ EN/số */
+  --fb:'Be Vietnam Pro',system-ui,sans-serif;    /* bắt buộc cho mọi chữ VI */
+  --gut:clamp(20px,5vw,80px);
+}
+body[data-navc="dark"]{ --navc:#0E2A1E; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--dark); color:var(--ivo);
+  font-family:var(--fb); font-weight:400; line-height:1.6;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--grn);color:var(--dark)}
+img,svg{display:block}
+button{font-family:var(--fb);cursor:pointer;background:none;border:none;color:inherit}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--gut)}
+.hide{display:none!important}
+section{position:relative}
+
+/* ---- display type (EN only) ---- */
+.dsp{font-family:var(--fd);font-weight:400;text-transform:uppercase;line-height:.94;letter-spacing:.015em}
+/* ---- VN display ---- */
+.vnd{font-family:var(--fb);font-weight:900;line-height:1.14}
+
+/* ---- masked line reveal (padding dư để dấu tiếng Việt không bị cắt) ---- */
+.ln{display:block;overflow:hidden;padding:.08em 0 .1em}
+.lni{display:block}
+
+/* ---- fixed chrome ---- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;
+  padding:18px var(--gut);color:var(--navc);transition:color .5s;pointer-events:none}
+.nav a{pointer-events:auto}
+.nav-brand{font-family:var(--fd);font-size:15px;letter-spacing:.22em;display:flex;align-items:center;gap:10px}
+.nav-brand i{width:8px;height:8px;border-radius:50%;background:var(--grn);display:inline-block;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.55);opacity:.5}}
+.nav-links{display:flex;gap:clamp(10px,1.6vw,22px);font-weight:700;font-size:11px;letter-spacing:.18em}
+.nav-links a{position:relative;padding:4px 0;opacity:.55;transition:opacity .3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--grn);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.nav-links a:hover,.nav-links a.on{opacity:1}
+.nav-links a.on::after{transform:scaleX(1)}
+.nav-links a.core{color:var(--grn);opacity:1}
+#pbar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--grn);transform:scaleX(0);transform-origin:left;z-index:85}
+
+.pnav{position:fixed;bottom:26px;z-index:80;width:46px;height:46px;border:1px solid var(--navc);border-radius:50%;
+  color:var(--navc);font-size:17px;display:flex;align-items:center;justify-content:center;opacity:.35;transition:.35s;pointer-events:auto}
+.pnav:hover{opacity:1;background:var(--navc);color:var(--dark)}
+.pnav-prev{left:var(--gut)} .pnav-next{right:var(--gut)}
+.pcount{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:80;color:var(--navc);
+  font-size:11px;letter-spacing:.3em;font-weight:600;opacity:.7;transition:color .5s}
+.pcount b{color:var(--grn)}
+
+/* ---- grain ---- */
+.grain{position:fixed;inset:-60%;width:220%;height:220%;z-index:90;pointer-events:none;opacity:.055;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='260' height='260' filter='url(%23n)'/></svg>");
+  animation:grain 7s steps(8) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-2%,3%)}50%{transform:translate(3%,-2%)}75%{transform:translate(-3%,-3%)}100%{transform:translate(2%,2%)}}
+
+/* ---- wipes ---- */
+.wipe{position:absolute;inset:0;z-index:7;pointer-events:none;transform-origin:bottom}
+
+/* ---- cursor ---- */
+#curDot,#curRing{position:fixed;top:0;left:0;z-index:200;pointer-events:none;border-radius:50%;opacity:0}
+#curDot{width:7px;height:7px;background:var(--grn)}
+#curRing{width:36px;height:36px;border:1.5px solid var(--navc);display:flex;align-items:center;justify-content:center;transition:border-color .4s}
+#curRing span{font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--dark);opacity:0}
+#curRing.labeled{background:var(--grn);border-color:var(--grn)}
+#curRing.labeled span{opacity:1}
+html.has-cursor, html.has-cursor *{cursor:none!important}
+
+/* ============ OPENING ============ */
+#open{min-height:100vh;min-height:100svh;background:var(--dark);display:flex;align-items:center;overflow:hidden}
+#ambient{position:absolute;inset:0;width:100%;height:100%}
+.ov-inner{position:relative;z-index:2;width:100%;padding:0 var(--gut)}
+.ov-kicker{font-size:11px;font-weight:600;letter-spacing:.5em;color:var(--sand);margin-bottom:clamp(18px,3vh,34px)}
+.ov-title{font-family:var(--fd);text-transform:uppercase;line-height:.86;font-size:clamp(4.2rem,17.5vw,15.5rem);color:var(--ivo)}
+.ov-title .row{display:block;overflow:hidden}
+.ov-title .ch{display:inline-block}
+.ov-title .shift{color:var(--grn)}
+.ov-tag{margin-top:clamp(20px,4vh,44px);font-weight:800;font-size:clamp(1.05rem,2.5vw,1.7rem);letter-spacing:.12em}
+.ov-tag em{font-style:normal;color:var(--grn)}
+.ov-rule{width:0;height:2px;background:var(--grn);margin-top:22px}
+.ov-credit{position:absolute;left:var(--gut);bottom:26px;font-size:10.5px;letter-spacing:.14em;color:var(--sand);opacity:.75;z-index:2}
+.ov-scroll{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:2;text-align:center;
+  font-size:10px;letter-spacing:.42em;font-weight:600;color:var(--ivo)}
+.ov-scroll i{display:block;width:1px;height:38px;background:var(--grn);margin:12px auto 0;transform-origin:top;animation:dropline 1.8s ease-in-out infinite}
+@keyframes dropline{0%{transform:scaleY(0)}55%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* ============ SECTION HEADER PATTERN ============ */
+.s-head{display:flex;align-items:center;gap:16px;margin-bottom:clamp(22px,4vh,42px)}
+.s-index{font-family:var(--fd);font-size:13px;letter-spacing:.2em;color:var(--grn)}
+.s-line{flex:1;height:1px;background:currentColor;opacity:.18}
+.s-label{font-size:11px;font-weight:700;letter-spacing:.34em;opacity:.7}
+
+/* ============ 01 — CONSUME ============ */
+#s01{background:var(--ivo);color:var(--dark);padding:clamp(90px,14vh,150px) 0 clamp(80px,10vh,130px)}
+#s01 h2{font-size:clamp(2.7rem,9.4vw,8.6rem);color:var(--dark)}
+#s01 h2 .g2{color:var(--grn)}
+.s01-sub{max-width:52ch;margin-top:26px;font-weight:500;color:rgba(14,42,30,.75)}
+.s01-field{position:relative;height:112vh;margin-top:clamp(20px,4vh,50px)}
+.obj{position:absolute;left:var(--x);top:var(--y);width:var(--w,150px);text-align:center}
+.obj-chip{width:100%;aspect-ratio:1;border-radius:50%;border:1.5px solid var(--dark);background:var(--ivo);
+  display:flex;align-items:center;justify-content:center;color:var(--dark);
+  box-shadow:5px 7px 0 rgba(14,42,30,.12);transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s}
+.obj:hover .obj-chip{transform:translateY(-8px) rotate(3deg);box-shadow:8px 14px 0 rgba(76,175,109,.35)}
+.obj-chip svg{width:46%;height:46%}
+.obj span{display:block;margin-top:12px;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+.s01-state{font-weight:900;font-size:clamp(2.3rem,7.4vw,6.4rem);line-height:1.16;color:var(--dark);padding:0 var(--gut);max-width:1440px;margin:0 auto}
+.s01-state em{font-style:normal;color:var(--grn)}
+
+/* ============ 02 — PROBLEM ============ */
+#s02{background:var(--dark)}
+.s02-pin{height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.s02-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#bigBottle{width:clamp(150px,20vw,230px);color:var(--ivo);opacity:.95}
+.s02-debris{position:absolute;inset:0}
+.deb{position:absolute;left:var(--x);top:var(--y);width:var(--w,40px);color:var(--grn);opacity:.85}
+.deb.alt{color:var(--sand)}
+.deb svg{width:100%;height:auto}
+.s02-line{position:absolute;left:0;right:0;text-align:center;font-weight:900;font-size:clamp(1.7rem,5vw,4.2rem);opacity:0}
+.s02-l1{top:16%}
+.s02-l2{bottom:15%}
+.s02-line b{color:var(--grn);font-weight:900}
+.stats{padding:clamp(70px,10vh,120px) var(--gut) clamp(90px,12vh,150px)}
+.stats-intro{font-size:11px;font-weight:700;letter-spacing:.4em;color:var(--sand);margin-bottom:14px}
+.stat{display:grid;grid-template-columns:minmax(220px,.9fr) 1.1fr;gap:clamp(20px,4vw,60px);align-items:end;
+  border-top:1px solid rgba(246,244,236,.16);padding:clamp(30px,5vh,54px) 0}
+.stat:nth-child(odd){grid-template-columns:1.1fr minmax(220px,.9fr)}
+.stat:nth-child(odd) .stat-num{order:2;text-align:right}
+.stat-num{font-family:var(--fd);font-size:clamp(3.2rem,7.6vw,7rem);line-height:.9;color:var(--grn)}
+.stat-num .unit{font-size:.32em;letter-spacing:.08em;color:var(--ivo);margin-left:.15em}
+.stat-txt p{max-width:46ch;color:rgba(246,244,236,.88);font-weight:500}
+.stat-txt b{color:var(--ivo)}
+.stat-src{display:block;margin-top:12px;font-size:10px;letter-spacing:.18em;color:var(--sand);opacity:.8;text-transform:uppercase}
+
+/* ============ 03 — DEFINITION ============ */
+#s03{background:var(--grn);color:var(--ivo)}
+.s03-pin{height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.s03-q{font-family:var(--fd);text-transform:uppercase;font-size:clamp(2.4rem,7.2vw,6.6rem);line-height:1;text-align:center;color:var(--dark)}
+.s03-stack{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.phrase{position:absolute;text-align:center;font-weight:900;font-size:clamp(1.7rem,5.4vw,4.6rem);line-height:1.18;
+  max-width:88vw;opacity:0}
+.phrase small{display:block;font-size:11px;font-weight:700;letter-spacing:.4em;margin-bottom:14px;opacity:.65}
+.phrase.alt{color:var(--dark)}
+.s03-out{padding:clamp(80px,12vh,140px) var(--gut);text-align:center}
+.s03-out p{font-weight:800;font-size:clamp(1.3rem,3.2vw,2.3rem);max-width:30ch;margin:0 auto;line-height:1.4}
+.s03-out b{color:var(--dark)}
+
+/* ============ 04 — FIVE CHOICES ============ */
+#s04{background:var(--ivo);color:var(--dark)}
+.s04-pin{height:100vh;height:100svh;display:grid;grid-template-columns:minmax(240px,.42fr) 1fr;gap:clamp(24px,4vw,70px);
+  padding:0 var(--gut);align-items:center;position:relative}
+.s04-side .s-head{margin-bottom:18px}
+.s04-intro{max-width:34ch;color:rgba(14,42,30,.7);font-weight:500;margin-bottom:30px}
+.s04-rail{display:flex;flex-direction:column;gap:6px}
+.s04-rail button{display:flex;gap:14px;align-items:baseline;text-align:left;padding:9px 0;border-bottom:1px solid rgba(14,42,30,.14);
+  font-weight:700;font-size:13px;letter-spacing:.06em;color:rgba(14,42,30,.45);transition:.3s}
+.s04-rail button b{font-family:var(--fd);font-weight:400;font-size:15px;letter-spacing:.1em}
+.s04-rail button.on{color:var(--dark);padding-left:10px}
+.s04-rail button.on b{color:var(--grn)}
+.s04-main{position:relative;height:62vh;min-height:420px}
+.s04-num{position:absolute;right:-1%;top:-6%;font-family:var(--fd);font-size:clamp(9rem,26vw,22rem);line-height:1;
+  color:transparent;-webkit-text-stroke:1.5px rgba(14,42,30,.22);pointer-events:none}
+.s04-body{position:absolute;left:0;bottom:8%;max-width:min(560px,60%)}
+.s04-title{font-weight:900;font-size:clamp(1.9rem,4.4vw,3.6rem);line-height:1.1;color:var(--dark)}
+.s04-desc{margin-top:16px;font-size:clamp(1rem,1.5vw,1.25rem);font-weight:500;color:rgba(14,42,30,.75);max-width:38ch}
+.s04-viswrap{position:absolute;left:52%;top:6%;width:min(360px,40vw)}
+.s04-vis{position:absolute;inset:0;display:flex;align-items:center;gap:clamp(14px,2vw,26px);opacity:0}
+.pv{flex:1;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--dark)}
+.pv svg{width:52%;height:52%}
+.pv-old{color:var(--dark);position:relative;background:transparent}
+.pv-old::after{content:'';position:absolute;width:112%;height:1.5px;background:var(--sand);transform:rotate(-42deg)}
+.pv-arrow{flex:0 0 auto;width:34px;height:34px;color:var(--grn)}
+.pv-arrow svg{width:100%;height:100%}
+.pv-new{background:var(--grn);border-color:var(--grn);color:var(--dark);box-shadow:0 14px 30px -12px rgba(76,175,109,.7)}
+.s04-cap{position:absolute;left:0;right:0;bottom:-46px;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.24em;color:rgba(14,42,30,.55)}
+
+/* ============ 05 — QUIZ ============ */
+#s05{background:var(--dark);padding:clamp(100px,14vh,160px) 0}
+.quiz{max-width:860px}
+.quiz h2{font-family:var(--fd);text-transform:uppercase;font-size:clamp(2.2rem,6.6vw,5.6rem);line-height:.98}
+.quiz .q-sub{margin-top:18px;color:rgba(246,244,236,.65);max-width:56ch}
+.q-box{margin-top:clamp(36px,6vh,60px);border:1px solid rgba(246,244,236,.18);padding:clamp(26px,4.5vw,52px)}
+.q-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(26px,4vh,40px)}
+.q-count{font-size:11px;font-weight:700;letter-spacing:.32em;color:var(--sand)}
+.q-ticks{display:flex;gap:8px}
+.q-ticks i{width:26px;height:3px;background:rgba(246,244,236,.2);transition:.4s}
+.q-ticks i.on{background:var(--grn)}
+.q-text{font-weight:800;font-size:clamp(1.3rem,2.9vw,2.1rem);line-height:1.35;min-height:2.7em}
+.q-btns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(24px,4vh,38px)}
+.q-btns button{border:1.5px solid rgba(246,244,236,.35);padding:20px;font-weight:900;letter-spacing:.24em;font-size:15px;color:var(--ivo);transition:.3s}
+.q-btns button:hover{border-color:var(--grn);color:var(--grn);transform:translateY(-3px)}
+.q-btns button.yes:hover{background:var(--grn);color:var(--dark)}
+.q-result h3{font-family:var(--fd);text-transform:uppercase;font-size:clamp(2rem,5vw,3.8rem);color:var(--grn);line-height:1}
+.q-result .qr-step{margin-top:22px;font-weight:800;font-size:clamp(1.25rem,2.6vw,1.9rem);line-height:1.4}
+.q-result .qr-step em{font-style:normal;color:var(--grn)}
+.q-result .qr-note{margin-top:18px;color:rgba(246,244,236,.7);max-width:52ch}
+.q-replay{margin-top:30px;border:1.5px solid var(--grn);color:var(--grn);padding:14px 30px;font-weight:800;letter-spacing:.2em;font-size:12px;transition:.3s}
+.q-replay:hover{background:var(--grn);color:var(--dark)}
+
+/* ============ 06 — MOVEMENT ============ */
+#s06{background:var(--deep)}
+.s06-pin{height:100vh;height:100svh;overflow:hidden;position:relative}
+#crowdCanvas{position:absolute;inset:0;width:100%;height:100%}
+.s06-words{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:flex-start;padding:0 var(--gut) clamp(70px,10vh,100px);pointer-events:none}
+.s06-words .w{position:absolute;left:var(--gut);bottom:clamp(70px,10vh,100px);font-family:var(--fd);text-transform:uppercase;
+  font-size:clamp(2.6rem,9vw,8.5rem);line-height:.95;opacity:0}
+.s06-words .w3{color:var(--grn)}
+.s06-count{position:absolute;top:clamp(80px,12vh,110px);right:var(--gut);font-family:var(--fd);font-size:clamp(1.6rem,4vw,3rem);color:var(--sand);letter-spacing:.06em}
+.s06-count small{display:block;font-family:var(--fb);font-weight:700;font-size:10px;letter-spacing:.4em;color:rgba(246,244,236,.5);margin-top:6px;text-align:right}
+.s06-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--grn)}
+.s06-fallback svg{width:min(46vw,320px);height:auto}
+.s06-msg{padding:clamp(70px,10vh,120px) var(--gut);text-align:center}
+.s06-msg p{font-weight:800;font-size:clamp(1.3rem,3vw,2.2rem);max-width:30ch;margin:0 auto}
+.s06-msg b{color:var(--grn)}
+
+/* ============ 07 — THE PRODUCT ★ ============ */
+#s07{background:var(--deep)}
+.s07-gate{height:100vh;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--gut);overflow:hidden}
+.gate-k{font-size:11px;font-weight:700;letter-spacing:.5em;color:var(--sand);margin-bottom:26px}
+.gate-t{font-weight:900;font-size:clamp(1.7rem,4.8vw,3.9rem);line-height:1.25}
+.gate-t span{color:var(--grn)}
+.gate-line{width:1px;height:0;background:var(--grn);margin-top:38px}
+.s07-show{padding:clamp(60px,8vh,100px) 0 clamp(90px,12vh,140px);position:relative}
+.s07-beam{position:absolute;left:50%;top:-40px;width:min(760px,92vw);height:120%;transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 30%, rgba(76,175,109,.14), rgba(76,175,109,0) 62%);pointer-events:none}
+.s07-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(20px,3vw,48px);align-items:center;position:relative}
+.s07-meta{font-size:10.5px;font-weight:600;letter-spacing:.26em;line-height:2.4;color:var(--sand)}
+.s07-meta b{color:var(--ivo);font-weight:700}
+.s07-meta.right{text-align:right}
+.poster-tilt{will-change:transform}
+/* poster = ảnh tĩnh, đứng yên hoàn toàn */
+.poster-img{position:relative;width:min(500px,92vw);margin:0 auto}
+.poster-img img{width:100%;height:auto;display:block;background:#ECEEE7;
+  border:1px solid rgba(246,244,236,.22);box-shadow:0 50px 110px -35px rgba(0,0,0,.8)}
+/* poster DOM dự phòng (khi thiếu poster.png) */
+.poster-dom{background:var(--ivo);color:var(--dark);padding:24px 22px;border:1px solid rgba(14,42,30,.3);
+  box-shadow:0 50px 110px -35px rgba(0,0,0,.8)}
+.pd-row{display:flex;justify-content:space-between;font-weight:600;letter-spacing:.22em;font-size:9px}
+.pd-row.top{padding-bottom:10px;border-bottom:1px solid rgba(14,42,30,.55)}
+.pd-brand{display:flex;align-items:center;margin:16px 0 20px;font-size:9.5px;font-weight:700;letter-spacing:.24em}
+.pd-brand .l{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pd-brand .l svg{width:16px;height:16px;color:var(--grn)}
+.pd-brand .line{flex:1;height:1px;background:rgba(14,42,30,.5);margin:0 10px}
+.pd-brand .r{text-align:right;line-height:1.5;white-space:nowrap}
+.pd-title{font-family:var(--fd);text-transform:uppercase;line-height:.92;font-size:clamp(44px,13vw,64px)}
+.pd-title .g{color:var(--dark)} .pd-title .s{color:var(--grn)}
+.pd-tag{margin:12px 0 18px;font-weight:700;letter-spacing:.32em;font-size:10px}
+.pd-panel{border:1px solid rgba(76,175,109,.9);padding:13px}
+.pd-panel-h{display:flex;justify-content:space-between;align-items:center;font-size:8.5px;font-weight:700;letter-spacing:.22em;margin-bottom:11px}
+.pd-dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--grn);margin-left:3px}
+.pd-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pd-cell{text-align:center}
+.pd-card{border:1px solid rgba(14,42,30,.55);padding:10px 2px 8px}
+.pd-card svg{width:21px;height:21px;margin:0 auto 7px;color:var(--dark)}
+.pd-card b{display:block;font-size:7.5px;letter-spacing:.1em;line-height:1.5;font-weight:800}
+.pd-cell>span{display:block;margin-top:6px;font-size:6.8px;line-height:1.55;color:rgba(14,42,30,.65)}
+.pd-cta{margin:14px auto 2px;width:80%;background:var(--dark);color:var(--ivo);text-align:center;
+  font-weight:800;letter-spacing:.18em;font-size:10px;padding:10px 6px}
+.pd-foot{display:flex;justify-content:space-between;margin-top:16px;font-size:7.5px;line-height:1.8;color:rgba(14,42,30,.78)}
+.pd-foot .r{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.16em;line-height:1.6}
+.pd-foot .r svg{width:15px;height:15px;color:var(--grn)}
+.pd-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(14,42,30,.55);margin-top:14px;padding-top:8px;
+  font-size:8px;font-weight:700;letter-spacing:.2em}
+.s07-actions{text-align:center;margin-top:clamp(40px,6vh,60px)}
+.btn{display:inline-flex;align-items:center;gap:12px;background:var(--grn);color:var(--dark);font-weight:900;
+  letter-spacing:.16em;font-size:13px;padding:18px 34px;transition:.3s;border:1.5px solid var(--grn)}
+.btn:hover{background:transparent;color:var(--grn);transform:translateY(-2px)}
+#startBtn{background:var(--dark);color:var(--ivo);border-color:var(--dark)}
+#startBtn:hover{background:var(--grn);border-color:var(--grn);color:var(--dark)}
+.s07-actions p{margin-top:16px;font-size:11px;letter-spacing:.12em;color:rgba(246,244,236,.5)}
+.s07-note{max-width:640px;margin:clamp(50px,8vh,80px) auto 0;text-align:center;font-weight:600;color:rgba(246,244,236,.75);font-size:15px}
+.s07-note b{color:var(--grn)}
+
+/* ============ 08 — MEANING ============ */
+#s08{background:var(--ivo);color:var(--dark);padding:clamp(100px,14vh,160px) 0}
+.s08-head h2{font-family:var(--fd);text-transform:uppercase;font-size:clamp(2.6rem,8.4vw,7.6rem);line-height:.95;color:var(--dark)}
+.s08-head p{margin-top:16px;font-weight:600;letter-spacing:.1em;color:rgba(14,42,30,.6)}
+.mean{display:grid;grid-template-columns:150px 1fr 90px;gap:clamp(18px,3vw,50px);align-items:center;
+  border-top:1.5px solid var(--dark);padding:clamp(30px,5vh,52px) 0}
+.mean:last-of-type{border-bottom:1.5px solid var(--dark)}
+.mean-num{font-family:var(--fd);font-size:clamp(2.6rem,5vw,4.6rem);color:transparent;-webkit-text-stroke:1.5px var(--grn)}
+.mean h3{font-weight:900;font-size:clamp(1.4rem,3vw,2.4rem)}
+.mean p{margin-top:8px;color:rgba(14,42,30,.72);max-width:56ch;font-weight:500}
+.mean-icon{color:var(--grn)}
+.mean-icon svg{width:100%;height:auto}
+.s08-close{margin-top:clamp(44px,7vh,70px);padding-left:22px;border-left:3px solid var(--grn);
+  font-weight:600;font-size:clamp(1rem,1.6vw,1.25rem);max-width:56ch;color:rgba(14,42,30,.85)}
+
+/* ============ FINAL ============ */
+#final{background:var(--ivo);color:var(--dark);overflow:hidden;padding:clamp(90px,12vh,150px) 0 90px}
+.fin-sun{position:absolute;left:50%;top:8%;width:min(560px,80vw);aspect-ratio:1;border-radius:50%;
+  background:#FCFBF3;border:1px solid rgba(76,175,109,.35);transform:translateX(-50%) scale(0)}
+#earthCanvas{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:min(480px,72vw);aspect-ratio:1;pointer-events:none}
+.fin-leaf{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:min(300px,50vw);color:var(--grn);display:none}
+.fin-leaf svg{width:100%;height:auto}
+.fin-wrap{position:relative;z-index:2;text-align:center}
+.fin-big{font-family:var(--fd);text-transform:uppercase;font-size:clamp(3rem,12.5vw,11.5rem);line-height:.92;color:var(--dark)}
+.fin-big .green{color:var(--grn)}
+.fin-vn{margin-top:clamp(26px,4vh,42px);font-weight:800;font-size:clamp(1.2rem,2.6vw,1.9rem)}
+.fin-law{margin:20px auto 0;max-width:62ch;font-size:11.5px;color:rgba(14,42,30,.55)}
+.fin-law span{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.fin-cta{margin-top:clamp(34px,6vh,54px)}
+.fin-thanks h3{font-family:var(--fd);text-transform:uppercase;font-size:clamp(1.9rem,6vw,5.2rem);line-height:1;color:var(--grn)}
+.fin-thanks p{margin-top:18px;font-weight:700;letter-spacing:.16em;font-size:13px}
+.fin-thanks .credit{margin-top:26px;font-weight:500;letter-spacing:.1em;font-size:11px;color:rgba(14,42,30,.5)}
+.fin-note{margin-top:clamp(40px,7vh,64px);font-size:11px;letter-spacing:.14em;color:rgba(14,42,30,.45)}
+.leafbit{position:absolute;bottom:-30px;color:var(--grn);animation:floatup 5s ease-in forwards;pointer-events:none}
+.leafbit svg{width:100%;height:auto}
+@keyframes floatup{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.9}100%{transform:translateY(-92vh) rotate(160deg);opacity:0}}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .stat,.stat:nth-child(odd){grid-template-columns:1fr}
+  .stat:nth-child(odd) .stat-num{order:0;text-align:left}
+  .s04-pin{grid-template-columns:1fr;gap:0;align-content:center}
+  .s04-rail{display:none}
+  .s04-intro{display:none}
+  .s04-main{height:58vh}
+  .s04-viswrap{left:auto;right:0;top:0;width:min(230px,52vw)}
+  .s04-body{max-width:78%;bottom:2%}
+  .s07-grid{grid-template-columns:1fr;justify-items:center}
+  .s07-meta,.s07-meta.right{text-align:center}
+  .mean{grid-template-columns:70px 1fr;gap:18px}
+  .mean-icon{display:none}
+  .s01-field{height:130vh}
+}
+@media (max-width:600px){
+  .nav-links a span{display:none}
+  .pnav{display:none}
+  .q-btns{grid-template-columns:1fr}
+  .s06-words .w{left:var(--gut);right:var(--gut)}
+}
+@media (hover:none){ .pnav{opacity:.7} }
+@media (prefers-reduced-motion:reduce){
+  .grain,.nav-brand i,.ov-scroll i{animation:none}
+  *{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG SPRITE (line icons, 24x24, stroke) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-bottle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.7 2.2h4.6v2H9.7z"/><path d="M10.2 4.2v1.9c0 1.2-2.1 2-2.1 3.7v9.2a2.2 2.2 0 0 0 2.2 2.2h3.4a2.2 2.2 0 0 0 2.2-2.2V9.8c0-1.7-2.1-2.5-2.1-3.7V4.2"/><path d="M8.4 12.4h7.2M8.4 15.8h7.2"/></symbol>
+<symbol id="i-tumbler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.6 4.6V2.8h4.8v1.8"/><path d="M6.8 4.6h10.4"/><path d="M7.8 4.6 9 19.6A1.7 1.7 0 0 0 10.7 21.2h2.6a1.7 1.7 0 0 0 1.7-1.6l1.2-15"/><path d="M8.5 10.4h7"/></symbol>
+<symbol id="i-nylon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.2 8.6C7.9 7 7.6 4.8 8.9 3.9c.9-.6 1.9.1 2.5 1.2.6-1.1 1.6-1.8 2.5-1.2 1.3.9 1 3.1-.3 4.7"/><path d="M6.3 8.6h11.4l-1 10.6a2.2 2.2 0 0 1-2.2 2H9.5a2.2 2.2 0 0 1-2.2-2L6.3 8.6z"/></symbol>
+<symbol id="i-tote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M8.6 9.4V6.8a3.4 3.4 0 0 1 6.8 0v2.6"/><path d="M5.8 9.4h12.4v8.4a3 3 0 0 1-3 3H8.8a3 3 0 0 1-3-3V9.4z"/><path d="M5.8 12.6h12.4"/><path d="M12 12.6c1.6.2 2.3 1.2 2.1 2.6-1.6-.2-2.4-1.1-2.1-2.6z"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 2.8a6.2 6.2 0 0 1 3.6 11.2c-.7.5-1.1 1.3-1.1 2.1h-5c0-.8-.4-1.6-1.1-2.1A6.2 6.2 0 0 1 12 2.8z"/><path d="M9.8 18.6h4.4M10.6 21h2.8"/><path d="M12 7.4c1.7.3 2.4 1.5 2.2 3-1.7-.3-2.5-1.4-2.2-3z"/></symbol>
+<symbol id="i-leafbadge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"/><path d="M16.2 8c.2 4.3-2.3 6.9-5.9 6.9-.7 0-1.4-.1-1.9-.5.3-4.3 3.2-6.6 7.8-6.4z"/><path d="M8 17c1.6-2.6 3.8-4.4 6.2-5.6"/></symbol>
+<symbol id="i-recycle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.3"/><path d="M3.5 3.5v4.8h4.8"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4.6" y="8.4" width="14.8" height="10.8" rx="2"/><path d="M4.6 12.2h14.8M9 8.4V7a1.2 1.2 0 0 1 1.2-1.2h3.6A1.2 1.2 0 0 1 15 7v1.4"/><path d="M12 12.2v7"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 3.2c3.4 3.9 5.8 7 5.8 9.9a5.8 5.8 0 0 1-11.6 0c0-2.9 2.4-6 5.8-9.9z"/><path d="M9.2 13.6a2.9 2.9 0 0 0 2.6 2.9"/></symbol>
+<symbol id="i-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M8.2 3.6c.7 1.2 2.1 2 3.8 2s3.1-.8 3.8-2L20 6l-2 3.4-1.9-1V20.4H7.9V8.4L6 9.4 4 6l4.2-2.4z"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="7.2" y="2.6" width="9.6" height="18.8" rx="2.4"/><path d="M10.6 18.4h2.8"/></symbol>
+<symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6.4 6.6h11.2"/><path d="M13.4 6.6 15 2.8"/><path d="M7 6.6l1.2 12.6a2 2 0 0 0 2 1.8h3.6a2 2 0 0 0 2-1.8L17 6.6"/><path d="M7.5 11.6h9"/><path d="M12 11.6c1.4.2 2 1 1.8 2.3-1.4-.2-2.1-1-1.8-2.3z"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 21.4v-8.2"/><path d="M12 13.2c0-3.6-2.6-5.7-6.2-5.7 0 3.6 2.6 5.7 6.2 5.7z"/><path d="M12 11c0-3.1 2.2-5.2 5.9-5.2 0 3.1-2.2 5.2-5.9 5.2z"/><path d="M12 9.4c0-2.4 0-4.4 0-6.4"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20.5 4.5C20 13.8 14.6 19.3 7.2 19.3c-1.6 0-3-.4-4-1.2C4 9.6 10.2 5 20.5 4.5z"/><path d="M3.8 19.6C7.6 13.6 12.4 9.7 17.8 7"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 4h2.4l2.2 11h9.6l2.2-8H6.2"/><circle cx="9.6" cy="19.2" r="1.6"/><circle cx="16.4" cy="19.2" r="1.6"/><path d="M11 8.6c2.6.2 3.8 1.6 3.5 4-2.6-.3-3.9-1.6-3.5-4z"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+  <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 3.9 5.5 3.9 9S14.6 18.6 12 21c-2.6-2.4-3.9-5.5-3.9-9S9.4 5.4 12 3z"/></symbol>
+</defs></svg>
+
+<!-- progress + nav -->
+<div id="pbar"></div>
+<nav class="nav" aria-label="Điều hướng">
+  <a class="nav-brand" href="#open"><i></i>GREEN SHIFT</a>
+  <div class="nav-links">
+    <a href="#s01" data-sec="s01">01</a><a href="#s02" data-sec="s02">02</a><a href="#s03" data-sec="s03">03</a>
+    <a href="#s04" data-sec="s04">04</a><a href="#s05" data-sec="s05">05</a><a href="#s06" data-sec="s06">06</a>
+    <a href="#s07" data-sec="s07" class="core" title="Phần lõi — sản phẩm truyền thông">★07</a><a href="#s08" data-sec="s08">08</a>
+  </div>
+</nav>
+
+<button class="pnav pnav-prev" id="prevBtn" aria-label="Phần trước">←</button>
+<button class="pnav pnav-next" id="nextBtn" aria-label="Phần sau">→</button>
+<div class="pcount"><b id="pcNow">01</b> / 10</div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ OPENING ============ -->
+<section id="open" data-navc="light">
+  <canvas id="ambient"></canvas>
+  <div class="ov-inner">
+    <p class="ov-kicker">AN INTERACTIVE PRESENTATION</p>
+    <h1 class="ov-title" aria-label="GREEN SHIFT">
+      <span class="row"><span class="ch">G</span><span class="ch">R</span><span class="ch">E</span><span class="ch">E</span><span class="ch">N</span></span>
+      <span class="row shift"><span class="ch">S</span><span class="ch">H</span><span class="ch">I</span><span class="ch">F</span><span class="ch">T</span></span>
+    </h1>
+    <div class="ov-rule"></div>
+    <p class="ov-tag">MỖI LỰA CHỌN — <em>MỘT THAY ĐỔI.</em></p>
+  </div>
+  <!-- ✏️ SỬA THÔNG TIN CÁ NHÂN TẠI ĐÂY -->
+  <p class="ov-credit">[Tên học sinh] — [Lớp] — [Môn học]</p>
+  <div class="ov-scroll">SCROLL TO EXPLORE<i></i></div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section id="s01" data-navc="dark">
+  <div class="wipe" style="background:#0E2A1E"></div>
+  <div class="wrap">
+    <div class="s-head"><span class="s-index">01</span><span class="s-line"></span><span class="s-label">THÓI QUEN HẰNG NGÀY</span></div>
+    <h2 class="dsp"><span class="ln"><span class="lni">WE CONSUME.</span></span><span class="ln"><span class="lni g2">EVERY SINGLE DAY.</span></span></h2>
+    <p class="s01-sub">Mỗi ngày, chúng ta mua — dùng — và bỏ đi hàng chục món đồ, hiếm khi kịp nghĩ về vòng đời của chúng.</p>
+  </div>
+  <div class="s01-field" id="s01field">
+    <div class="obj" style="--x:6%;--y:4%;--w:165px" data-depth="26"><div class="obj-chip"><svg><use href="#i-bottle"/></svg></div><span>Chai nhựa</span></div>
+    <div class="obj" style="--x:38%;--y:16%;--w:140px" data-depth="44"><div class="obj-chip"><svg><use href="#i-nylon"/></svg></div><span>Túi nilon</span></div>
+    <div class="obj" style="--x:68%;--y:2%;--w:150px" data-depth="18"><div class="obj-chip"><svg><use href="#i-box"/></svg></div><span>Hộp đồ ăn</span></div>
+    <div class="obj" style="--x:16%;--y:52%;--w:150px" data-depth="36"><div class="obj-chip"><svg><use href="#i-shirt"/></svg></div><span>Quần áo</span></div>
+    <div class="obj" style="--x:52%;--y:60%;--w:135px" data-depth="52"><div class="obj-chip"><svg><use href="#i-phone"/></svg></div><span>Đồ điện tử</span></div>
+    <div class="obj" style="--x:79%;--y:44%;--w:158px" data-depth="28"><div class="obj-chip"><svg><use href="#i-cup"/></svg></div><span>Đồ uống đóng chai</span></div>
+  </div>
+  <h3 class="s01-state">
+    <span class="ln"><span class="lni">Mỗi sản phẩm</span></span>
+    <span class="ln"><span class="lni">đều để lại</span></span>
+    <span class="ln"><span class="lni"><em>một dấu vết.</em></span></span>
+  </h3>
+</section>
+
+<!-- ============ 02 ============ -->
+<section id="s02" data-navc="light">
+  <div class="wipe" style="background:#F6F4EC"></div>
+  <div class="s02-pin" id="s02pin">
+    <div class="s02-stage">
+      <svg id="bigBottle"><use href="#i-bottle"/></svg>
+      <div class="s02-debris" id="debris"></div>
+      <div class="s02-line s02-l1">Một lựa chọn <b>nhỏ</b></div>
+      <div class="s02-line s02-l2">có thể tạo ra <b>một tác động lớn.</b></div>
+    </div>
+  </div>
+  <div class="stats">
+    <p class="stats-intro">VÀ DẤU VẾT ĐÓ LỚN TỚI MỨC NÀO?</p>
+    <div class="stat">
+      <div class="stat-num"><span class="count" data-to="1.8" data-dec="1">0</span><span class="unit">triệu tấn</span></div>
+      <div class="stat-txt"><p>Mỗi năm Việt Nam thải ra khoảng <b>1,8 triệu tấn</b> rác thải nhựa — nhưng chỉ <b><span class="count" data-to="27">0</span>%</b> được tái chế.</p>
+      <span class="stat-src">Nguồn: Bộ Tài nguyên và Môi trường</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="count" data-to="30">0</span><span class="unit">tỷ</span></div>
+      <div class="stat-txt"><p>Hơn <b>30 tỷ</b> túi nilon được dùng mỗi năm — hơn <b><span class="count" data-to="80">0</span>%</b> bị vứt bỏ chỉ sau một lần dùng.</p>
+      <span class="stat-src">Nguồn: Bộ Tài nguyên và Môi trường</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="count" data-to="4">0</span><span class="unit">quốc gia</span></div>
+      <div class="stat-txt"><p>Việt Nam nằm trong nhóm <b>4 quốc gia</b> xả nhiều rác nhựa ra biển nhất thế giới.</p>
+      <span class="stat-src">Nguồn: IUCN</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section id="s03" data-navc="light">
+  <div class="wipe" style="background:#0E2A1E"></div>
+  <div class="s03-pin" id="s03pin">
+    <p class="s03-q">SO... WHAT IS<br>GREEN CONSUMPTION?</p>
+    <div class="s03-stack">
+      <div class="phrase"><small>— 01 —</small>MUA HỢP LÝ</div>
+      <div class="phrase alt"><small>— 02 —</small>SỬ DỤNG LÂU HƠN</div>
+      <div class="phrase"><small>— 03 —</small>TÁI SỬ DỤNG</div>
+      <div class="phrase alt"><small>— 04 —</small>GIẢM RÁC THẢI</div>
+      <div class="phrase"><small>— 05 —</small>TIẾT KIỆM TÀI NGUYÊN</div>
+      <div class="phrase alt"><small>— 06 —</small>ƯU TIÊN SẢN PHẨM THÂN THIỆN MÔI TRƯỜNG</div>
+    </div>
+  </div>
+  <div class="s03-out">
+    <p>Tiêu dùng xanh = <b>tiêu dùng có trách nhiệm</b> với môi trường và tương lai.</p>
+  </div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section id="s04" data-navc="dark">
+  <div class="wipe" style="background:#4CAF6D"></div>
+  <div class="s04-pin" id="s04pin">
+    <div class="s04-side">
+      <div class="s-head"><span class="s-index">04</span><span class="s-line"></span></div>
+      <h2 class="vnd" style="font-size:clamp(1.9rem,3.4vw,3rem)">5 LỰA CHỌN XANH</h2>
+      <p class="s04-intro">Cuộn chậm để đi qua từng lựa chọn — hoặc chạm vào từng mục.</p>
+      <div class="s04-rail" id="s04rail"></div>
+    </div>
+    <div class="s04-main">
+      <div class="s04-num" id="s04num">01</div>
+      <div class="s04-body" id="s04body">
+        <h3 class="s04-title" id="s04title"></h3>
+        <p class="s04-desc" id="s04desc"></p>
+      </div>
+      <div class="s04-viswrap" id="s04vis" data-cursor="EXPLORE"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section id="s05" data-navc="light">
+  <div class="wipe" style="background:#F6F4EC"></div>
+  <div class="wrap quiz">
+    <div class="s-head"><span class="s-index">05</span><span class="s-line"></span><span class="s-label">GREEN CHALLENGE</span></div>
+    <h2>HOW GREEN ARE<br>YOUR CHOICES?</h2>
+    <p class="q-sub">Trả lời nhanh 5 câu hỏi — không có điểm số, không phán xét. Chỉ là một khoảnh khắc để nhìn lại thói quen của mình.</p>
+    <div class="q-box" id="qBox">
+      <div class="q-progress"><span class="q-count" id="qCount">CÂU 1/5</span><div class="q-ticks" id="qTicks"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <h3 class="q-text" id="qText"></h3>
+      <div class="q-btns"><button class="yes" data-ans="1">CÓ</button><button data-ans="0">KHÔNG</button></div>
+    </div>
+    <div class="q-box q-result hide" id="qResult">
+      <h3>YOUR NEXT STEP</h3>
+      <p class="qr-step">Thử bắt đầu bằng một thay đổi nhỏ:<br><em>mang theo bình nước cá nhân.</em></p>
+      <p class="qr-note" id="qrNote"></p>
+      <button class="q-replay" id="qReplay">LÀM LẠI</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section id="s06" data-navc="light">
+  <div class="wipe" style="background:#0E2A1E"></div>
+  <div class="s06-pin" id="s06pin">
+    <canvas id="crowdCanvas"></canvas>
+    <div class="s06-fallback hide" id="s06fb"><svg><use href="#i-leaf"/></svg></div>
+    <div class="s06-count"><span id="s06n">1</span><small>NGƯỜI CÙNG CHỌN XANH</small></div>
+    <div class="s06-words">
+      <div class="w w1">ONE PERSON</div>
+      <div class="w w2">BECOMES</div>
+      <div class="w w3">A MOVEMENT.</div>
+    </div>
+  </div>
+  <div class="s06-msg"><p>Một hành động nhỏ của mỗi người có thể tạo nên <b>thay đổi lớn cho cộng đồng.</b></p></div>
+</section>
+
+<!-- ============ 07 — SẢN PHẨM ★ ============ -->
+<section id="s07" data-navc="light">
+  <div class="wipe" style="background:#0E2A1E"></div>
+  <div class="s07-gate" id="gate">
+    <p class="gate-k">SAU TẤT CẢ NHỮNG GÌ VỪA XEM</p>
+    <h2 class="gate-t">ĐÂY LÀ SẢN PHẨM TRUYỀN THÔNG<br><span>EM THIẾT KẾ.</span></h2>
+    <div class="gate-line"></div>
+  </div>
+  <div class="s07-show">
+    <div class="s07-beam"></div>
+    <div class="wrap">
+      <div class="s07-grid">
+        <div class="s07-meta">SẢN PHẨM — <b>POSTER KỸ THUẬT SỐ</b><br>CHỦ ĐỀ — <b>TIÊU DÙNG XANH</b><br>TÊN — <b>“GREEN SHIFT”</b></div>
+        <div class="poster-tilt" id="posterTilt">
+          <!-- ✏️ ĐẶT FILE POSTER (ảnh em gửi) VÀO CÙNG THƯ MỤC VỚI FILE HTML, TÊN: poster.png -->
+          <figure class="poster-img" id="posterFrame" data-cursor="VIEW">
+            <img id="posterImg" src="poster.png" alt="Poster GREEN SHIFT — Mỗi lựa chọn, một thay đổi">
+            <div class="poster-dom hide" id="posterFallback">
+              <div class="pd-row top"><span>&gt; _</span><span>GREEN SHIFT</span></div>
+              <div class="pd-brand">
+                <span class="l"><svg><use href="#i-leaf"/></svg>TIÊU DÙNG XANH</span>
+                <span class="line"></span>
+                <span class="r">VÌ TƯƠNG LAI<br>BỀN VỮNG</span>
+              </div>
+              <div class="pd-title"><span class="g">GREEN</span><br><span class="s">SHIFT_</span></div>
+              <p class="pd-tag">MỖI LỰA CHỌN, MỘT THAY ĐỔI</p>
+              <div class="pd-panel">
+                <div class="pd-panel-h"><span>CHỌN HÀNH ĐỘNG XANH</span><span class="pd-dots"><i></i><i></i><i></i></span></div>
+                <div class="pd-cards">
+                  <div class="pd-cell"><div class="pd-card"><svg><use href="#i-tote"/></svg><b>TÚI<br>VẢI</b></div><span>Thay nhựa bằng hành động</span></div>
+                  <div class="pd-cell"><div class="pd-card"><svg><use href="#i-bottle"/></svg><b>BÌNH<br>NƯỚC</b></div><span>Uống xanh mỗi ngày</span></div>
+                  <div class="pd-cell"><div class="pd-card"><svg><use href="#i-sprout"/></svg><b>CÂY<br>XANH</b></div><span>Vì một hành tinh xanh hơn</span></div>
+                  <div class="pd-cell"><div class="pd-card"><svg><use href="#i-cup"/></svg><b>TÁI<br>CHẾ</b></div><span>Biến rác thành giá trị</span></div>
+                  <div class="pd-cell"><div class="pd-card"><svg><use href="#i-cart"/></svg><b>HỘP<br>TÁI DÙNG</b></div><span>Tiện lợi và bền vững</span></div>
+                </div>
+                <div class="pd-cta">&gt;&nbsp; HÔM NAY BẠN CHỌN GÌ?</div>
+              </div>
+              <div class="pd-foot">
+                <span>// Tiêu dùng xanh không khó<br>// Chỉ cần bạn bắt đầu<br>// Green Shift — Cùng nhau tạo nên sự thay đổi</span>
+                <span class="r"><svg><use href="#i-leaf"/></svg>GREEN SHIFT<br>2026</span>
+              </div>
+              <div class="pd-bottom"><span>SAVE THE PLANET</span><span>[ GREEN SHIFT ]</span></div>
+            </div>
+          </figure>
+        </div>
+        <div class="s07-meta right">ĐỊNH DẠNG — <b>PNG · KHỔ DỌC</b><br>THÔNG ĐIỆP — <b>MỖI LỰA CHỌN,<br>MỘT THAY ĐỔI</b><br>CTA — <b>HÔM NAY BẠN CHỌN GÌ?</b></div>
+      </div>
+      <div class="s07-actions">
+        <button class="btn" id="dlPoster">↓ TẢI POSTER (PNG)</button>
+        <p>Khung poster đứng yên hoàn toàn — nút tải lưu đúng file poster.png gốc, không dính hiệu ứng.</p>
+      </div>
+      <p class="s07-note">Một poster duy nhất, một lời kêu gọi duy nhất: biến “tiêu dùng xanh” từ một khái niệm thành <b>một lựa chọn cụ thể mỗi ngày</b> — và 5 hành động xanh trên poster chính là 5 lựa chọn bạn vừa xem ở phần trước.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section id="s08" data-navc="dark">
+  <div class="wipe" style="background:#0B2418"></div>
+  <div class="wrap">
+    <div class="s-head"><span class="s-index">08</span><span class="s-line"></span><span class="s-label">NỘI DUNG & Ý NGHĨA</span></div>
+    <div class="s08-head">
+      <h2>WHY DOES<br>IT MATTER?</h2>
+      <p>Ý nghĩa của sản phẩm truyền thông vừa xem.</p>
+    </div>
+    <div style="height:clamp(30px,6vh,60px)"></div>
+    <div class="mean m1" id="mean1">
+      <div class="mean-num">01</div>
+      <div><h3>BẢO VỆ MÔI TRƯỜNG</h3><p>Giảm lượng rác thải và hạn chế tác động tiêu cực đến môi trường.</p></div>
+      <div class="mean-icon"><svg><use href="#i-globe"/></svg></div>
+    </div>
+    <div class="mean m2" id="mean2">
+      <div class="mean-num">02</div>
+      <div><h3>TIẾT KIỆM TÀI NGUYÊN</h3><p>Sử dụng hợp lý điện, nước, nguyên liệu và sản phẩm.</p></div>
+      <div class="mean-icon"><svg><use href="#i-drop"/></svg></div>
+    </div>
+    <div class="mean m3" id="mean3">
+      <div class="mean-num">03</div>
+      <div><h3>THAY ĐỔI THÓI QUEN</h3><p>Hình thành lối sống có trách nhiệm và bền vững hơn.</p></div>
+      <div class="mean-icon"><svg><use href="#i-sprout"/></svg></div>
+    </div>
+    <p class="s08-close">Đây cũng chính là lý do vì sao sản phẩm truyền thông ở trên được thiết kế theo hướng này.</p>
+  </div>
+</section>
+
+<!-- ============ FINAL ============ -->
+<section id="final" data-navc="dark">
+  <div class="wipe" style="background:#F6F4EC"></div>
+  <div class="fin-sun" id="finSun"></div>
+  <canvas id="earthCanvas"></canvas>
+  <div class="fin-leaf" id="finLeaf"><svg><use href="#i-leaf"/></svg></div>
+  <div class="wrap fin-wrap">
+    <h2 class="fin-big">
+      <span class="ln"><span class="lni">THE FUTURE</span></span>
+      <span class="ln"><span class="lni">STARTS</span></span>
+      <span class="ln"><span class="lni">WITH</span></span>
+      <span class="ln"><span class="lni green">A CHOICE.</span></span>
+    </h2>
+    <p class="fin-vn">Mỗi ngày, hãy chọn xanh hơn một chút.</p>
+    <p class="fin-law">Từ 1/1/2026, Việt Nam đã ngừng sản xuất và nhập khẩu túi nilon khó phân hủy loại nhỏ.<span>Nguồn: Nghị định 08/2022/NĐ-CP — tương lai trong thông điệp này đã bắt đầu.</span></p>
+    <div class="fin-cta" id="finCta"><button class="btn" id="startBtn">START YOUR GREEN SHIFT</button></div>
+    <div class="fin-thanks hide" id="finThanks">
+      <h3>THANK YOU FOR CHOOSING<br>A GREENER FUTURE.</h3>
+      <p>GREEN SHIFT — MỖI LỰA CHỌN, MỘT THAY ĐỔI.</p>
+      <!-- ✏️ SỬA THÔNG TIN CÁ NHÂN TẠI ĐÂY -->
+      <p class="credit">[Tên học sinh] — [Lớp] — [Môn học]</p>
+    </div>
+    <p class="fin-note">← → để di chuyển giữa các phần · trình chiếu toàn màn hình (F11) khi thuyết trình</p>
+  </div>
+</section>
+
+<div id="curDot"></div><div id="curRing"><span id="curLabel"></span></div>
+<noscript><style>.wipe{display:none}</style><p style="position:fixed;bottom:0;left:0;right:0;background:#C9B79C;color:#0E2A1E;padding:10px;text-align:center;z-index:300">Bật JavaScript để xem trọn trải nghiệm GREEN SHIFT.</p></noscript>
+
+<!-- Libraries (CDN — cần mạng; nếu phòng học mất mạng, tải các file này về để cùng thư mục và đổi src) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+(function(){
+"use strict";
+const G = window.gsap;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HOVERABLE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const LOWFX = REDUCED || innerWidth < 720;
+const SECTIONS = ['#open','#s01','#s02','#s03','#s04','#s05','#s06','#s07','#s08','#final'];
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+let lenis = null, curIdx = 0;
+
+/* ---------- SMOOTH SCROLL ---------- */
+if(G && !REDUCED && window.Lenis){
+  lenis = new Lenis({duration:1.05, smoothWheel:true});
+  lenis.on('scroll', ScrollTrigger.update);
+  G.ticker.add(t => lenis.raf(t*1000));
+  G.ticker.lagSmoothing(0);
+}
+function goTo(i){
+  i = Math.max(0, Math.min(SECTIONS.length-1, i));
+  const el = $(SECTIONS[i]); if(!el) return;
+  if(lenis) lenis.scrollTo(el, {duration:1.15, easing:t=>1-Math.pow(1-t,3)});
+  else el.scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth'});
+}
+$('#prevBtn').addEventListener('click', ()=>goTo(curIdx-1));
+$('#nextBtn').addEventListener('click', ()=>goTo(curIdx+1));
+addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'){ e.preventDefault(); goTo(curIdx+1); }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); goTo(curIdx-1); }
+});
+$$('.nav-links a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const el = document.getElementById(a.dataset.sec);
+    if(lenis) lenis.scrollTo(el,{duration:1.15}); else el.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ---------- SECTION WATCHERS ---------- */
+function setTheme(mode){ document.body.dataset.navc = mode; }
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      setTheme(en.target.dataset.navc || 'light');
+      curIdx = SECTIONS.indexOf('#'+en.target.id);
+      $('#pcNow').textContent = String(curIdx+1).padStart(2,'0');
+      $$('.nav-links a').forEach(a=>a.classList.toggle('on', a.dataset.sec===en.target.id));
+    }
+  });
+},{rootMargin:'-45% 0px -45% 0px'});
+SECTIONS.forEach(s=>{ const el=$(s); if(el) io.observe(el); });
+
+const use = id => '<svg><use href="#'+id+'"/></svg>';
+
+/* ---------- 02 debris ---------- */
+(function(){
+  const icons = ['i-bottle','i-nylon','i-cup','i-box','i-bottle','i-nylon','i-cup','i-bottle','i-nylon','i-box','i-cup','i-nylon'];
+  let html='';
+  icons.forEach((ic,i)=>{
+    const x = 6 + Math.random()*84, y = 8 + Math.random()*78, w = 22 + Math.random()*34, r = -40+Math.random()*80;
+    html += '<div class="deb'+(i%3===2?' alt':'')+'" style="--x:'+x+'%;--y:'+y+'%;--w:'+w.toFixed(0)+'px;transform:rotate('+r.toFixed(0)+'deg)">'+use(ic)+'</div>';
+  });
+  $('#debris').innerHTML = html;
+})();
+
+/* ---------- 04 steps ---------- */
+const STEPS = [
+  {t:'MUA CÓ SUY NGHĨ', d:'Chỉ mua thứ thực sự cần.', old:'i-nylon', nw:'i-tote', cap:'TÚI NILON MUA NGẪU HỨNG → TÚI VẢI DÙNG LÂU DÀI'},
+  {t:'GIẢM ĐỒ DÙNG MỘT LẦN', d:'Ưu tiên sản phẩm có thể sử dụng nhiều lần.', old:'i-bottle', nw:'i-tumbler', cap:'CHAI NHỰA DÙNG MỘT LẦN → BÌNH CÁ NHÂN DÙNG NHIỀU LẦN'},
+  {t:'TÁI SỬ DỤNG', d:'Sử dụng lại trước khi vứt bỏ.', old:'i-box', nw:'i-recycle', cap:'DÙNG MỘT LẦN RỒI BỎ → SỬ DỤNG LẠI NHIỀU LẦN'},
+  {t:'CHỌN SẢN PHẨM XANH', d:'Ưu tiên sản phẩm bền, tiết kiệm và thân thiện môi trường.', old:'i-cup', nw:'i-leafbadge', cap:'SẢN PHẨM THƯỜNG → SẢN PHẨM CÓ NHÃN XANH'},
+  {t:'TIẾT KIỆM', d:'Tiết kiệm điện, nước, giấy và tài nguyên.', old:'i-bulb', nw:'i-drop', cap:'DÙNG LÃNG PHÍ → TIẾT KIỆM MỖI NGÀY'}
+];
+(function(){
+  const rail=$('#s04rail'), vis=$('#s04vis'); let rh='', vh='';
+  STEPS.forEach((s,i)=>{
+    rh += '<button data-i="'+i+'"><b>0'+(i+1)+'</b><span>'+s.t+'</span></button>';
+    vh += '<div class="s04-vis" data-i="'+i+'">'
+        + '<div class="pv pv-old">'+use(s.old)+'</div>'
+        + '<div class="pv-arrow">'+use('i-arrow')+'</div>'
+        + '<div class="pv pv-new">'+use(s.nw)+'</div>'
+        + '<div class="s04-cap">'+s.cap+'</div></div>';
+  });
+  rail.innerHTML=rh; vis.innerHTML=vh;
+  rail.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const i=+b.dataset.i, st=ScrollTrigger.getById && ScrollTrigger.getById('s04pin');
+      if(!st) return;
+      const top = st.start + (i+.06)/5*(st.end-st.start);
+      if(lenis) lenis.scrollTo(top); else window.scrollTo({top:top, behavior:'smooth'});
+    });
+  });
+})();
+function setStep(i){
+  $('#s04num').textContent = '0'+(i+1);
+  $('#s04title').textContent = STEPS[i].t;
+  $('#s04desc').textContent = STEPS[i].d;
+  $$('#s04rail button').forEach((b,j)=>b.classList.toggle('on', j===i));
+  $$('.s04-vis').forEach(v=>{
+    const on = +v.dataset.i===i;
+    if(G && !REDUCED) G.to(v,{autoAlpha:on?1:0, scale:on?1:.9, duration:.45, ease:'power2.out'});
+    else v.style.opacity = on?1:0;
+  });
+}
+
+/* ---------- 05 quiz ---------- */
+const QS=[
+ 'Hôm nay bạn có dùng chai nhựa dùng một lần không?',
+ 'Bạn có tái sử dụng đồ cũ thay vì vứt bỏ ngay không?',
+ 'Bạn có mang túi vải/túi tái sử dụng khi đi mua đồ không?',
+ 'Bạn có tắt điện, rút sạc khi không dùng thiết bị không?',
+ 'Bạn có ưu tiên chọn sản phẩm dùng được nhiều lần không?'
+];
+let qi=0, yes=0;
+function qShow(){
+  $('#qCount').textContent='CÂU '+(qi+1)+'/5';
+  $('#qText').textContent=QS[qi];
+  if(G && !REDUCED) G.fromTo('#qText',{y:18,opacity:0},{y:0,opacity:1,duration:.4,ease:'power2.out'});
+}
+$$('#qBox .q-btns button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    yes += +b.dataset.ans;
+    $('#qTicks').children[qi].classList.add('on');
+    qi++;
+    if(qi<5) qShow();
+    else{
+      $('#qBox').classList.add('hide');
+      $('#qrNote').textContent = yes>=3
+        ? 'Bạn đang có nhiều thói quen xanh sẵn rồi — poster này dành để rủ thêm bạn bè cùng bắt đầu.'
+        : 'Không sao cả — nhận ra thói quen cũ đã là bước đầu tiên của một lựa chọn mới.';
+      const r=$('#qResult'); r.classList.remove('hide');
+      if(G && !REDUCED) G.fromTo(r,{y:26,opacity:0},{y:0,opacity:1,duration:.6,ease:'power3.out'});
+    }
+  });
+});
+$('#qReplay').addEventListener('click', ()=>{
+  qi=0; yes=0;
+  $$('#qTicks i').forEach(t=>t.classList.remove('on'));
+  $('#qResult').classList.add('hide'); $('#qBox').classList.remove('hide'); qShow();
+});
+qShow();
+
+/* ---------- 07 poster: tilt + fallback + download ---------- */
+const pImg=$('#posterImg');
+function posterMissing(){ pImg.classList.add('hide'); $('#posterFallback').classList.remove('hide'); }
+pImg.addEventListener('error', posterMissing);
+if(pImg.complete && pImg.naturalWidth===0) posterMissing();
+
+if(HOVERABLE && !REDUCED && G){
+  const tilt=$('#posterTilt'), show=$('.s07-show');
+  show.addEventListener('pointermove', e=>{
+    const r=show.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+    G.to(tilt,{rotationY:px*6, rotationX:-py*4, transformPerspective:1000, duration:.6, ease:'power2.out'});
+  });
+  show.addEventListener('pointerleave', ()=>G.to(tilt,{rotationY:0,rotationX:0,duration:.8}));
+}
+$('#dlPoster').addEventListener('click', async function(){
+  const btn=this;
+  const save=(url)=>{const a=document.createElement('a');a.href=url;a.download='GREEN-SHIFT-poster.png';document.body.appendChild(a);a.click();a.remove();};
+  if(pImg.complete && pImg.naturalWidth>0){
+    const src=pImg.currentSrc||pImg.src;
+    try{
+      const b=await (await fetch(src)).blob();
+      const u=URL.createObjectURL(b); save(u); setTimeout(()=>URL.revokeObjectURL(u),5000);
+    }catch(e){ save(src); }
+    return;
+  }
+  if(window.html2canvas){
+    const old=btn.textContent; btn.disabled=true; btn.textContent='ĐANG XUẤT…';
+    try{
+      const c=await html2canvas($('#posterFallback'),{scale:2,backgroundColor:'#F6F4EC',logging:false});
+      save(c.toDataURL('image/png'));
+    }catch(e){ alert('Không xuất được ảnh — hãy chụp màn hình khung poster.'); }
+    btn.disabled=false; btn.textContent=old;
+    return;
+  }
+  alert('Không tìm thấy file poster.png và thiếu thư viện xuất ảnh.');
+});
+
+/* ---------- final button ---------- */
+$('#startBtn').addEventListener('click', ()=>{
+  $('#finCta').classList.add('hide');
+  const t=$('#finThanks'); t.classList.remove('hide');
+  if(G && !REDUCED) G.fromTo(t,{y:30,opacity:0},{y:0,opacity:1,duration:.9,ease:'power3.out'});
+  if(!LOWFX) for(let i=0;i<14;i++){
+    const s=document.createElement('span'); s.className='leafbit';
+    s.style.left=(4+Math.random()*92)+'%'; s.style.width=(14+Math.random()*18)+'px';
+    s.style.animationDelay=(Math.random()*2.5)+'s'; s.innerHTML=use('i-leaf');
+    $('#final').appendChild(s); setTimeout(()=>s.remove(),9000);
+  }
+});
+
+/* ================= MOTION ================= */
+if(G){
+  G.registerPlugin(ScrollTrigger);
+  if(!REDUCED){
+
+    G.to('#pbar',{scaleX:1, ease:'none', scrollTrigger:{start:0,end:'max',scrub:.3}});
+
+    $$('.wipe').forEach(w=>{
+      G.fromTo(w,{scaleY:1},{scaleY:0, ease:'power2.inOut',
+        scrollTrigger:{trigger:w.parentElement, start:'top 92%', end:'top 28%', scrub:true}});
+    });
+
+    /* opening */
+    const tl=G.timeline({defaults:{ease:'power4.out'}});
+    tl.set('.ov-title .ch',{yPercent:120})
+      .from('.ov-kicker',{opacity:0, letterSpacing:'1.1em', duration:1})
+      .to('.ov-title .row:not(.shift) .ch',{yPercent:0, stagger:.06, duration:1},'+=0.1')
+      .to('.ov-title .shift .ch',{yPercent:0, stagger:.05, duration:.9},'+=0.35')
+      .to('.ov-rule',{width:'120px', duration:.7},'-=.3')
+      .from('.ov-tag',{y:26, opacity:0, duration:.8},'-=.35')
+      .from('.ov-scroll',{opacity:0, duration:.8},'-=.2')
+      .from('.ov-credit',{opacity:0, duration:.8},'<');
+    G.to('.ov-inner',{yPercent:-22, opacity:.15, ease:'none',
+      scrollTrigger:{trigger:'#open', start:'top top', end:'bottom top', scrub:true}});
+    G.to('.ov-scroll',{opacity:0, scrollTrigger:{trigger:'#open', start:'4% top', end:'12% top', scrub:true}});
+
+    /* ---- 01: heading reveal (CHỈ h2, không đụng khối statement) ---- */
+    G.utils.toArray('#s01 h2 .ln').forEach(ln=>{
+      G.fromTo(ln.querySelector('.lni'),{yPercent:110},{yPercent:0, duration:1, ease:'power4.out',
+        scrollTrigger:{trigger:ln, start:'top 88%', toggleActions:'play none none reverse'}});
+    });
+    G.utils.toArray('.obj').forEach((o,i)=>{
+      G.from(o,{scale:.4, opacity:0, rotate:-14, duration:.9, ease:'back.out(1.6)', delay:i*.02,
+        scrollTrigger:{trigger:'#s01field', start:'top '+(82-i*5)+'%', toggleActions:'play none none reverse'}});
+      G.to(o,{y: -+o.dataset.depth*2.4, ease:'none',
+        scrollTrigger:{trigger:'#s01field', start:'top bottom', end:'bottom top', scrub:true}});
+    });
+    /* ---- 01: statement "Mỗi sản phẩm / đều để lại / một dấu vết."
+       MỘT timeline duy nhất + fromTo tường minh → không còn tween xung đột làm mất dòng đầu ---- */
+    G.timeline({scrollTrigger:{trigger:'.s01-state', start:'top 82%', toggleActions:'play none none reverse'}})
+      .fromTo('.s01-state .lni',{yPercent:110},{yPercent:0, duration:1.05, ease:'power4.out', stagger:.14});
+
+    /* 02 pinned bottle */
+    const tl2=G.timeline({scrollTrigger:{trigger:'#s02pin', start:'top top', end:'+=240%', scrub:.6, pin:true}});
+    tl2.to('#bigBottle',{scale:2.9, rotate:8, ease:'none', duration:.45},0)
+       .to('#bigBottle',{opacity:0, duration:.18},.4)
+       .from('.deb',{scale:0, opacity:0, transformOrigin:'50% 50%', stagger:.02, duration:.3, ease:'power2.out'},.38)
+       .fromTo('.s02-l1',{opacity:0, y:40},{opacity:1, y:0, duration:.18},.62)
+       .fromTo('.s02-l2',{opacity:0, y:40},{opacity:1, y:0, duration:.18},.82);
+
+    /* 02 count-up */
+    function fmt(v,dec){ return dec? v.toFixed(dec).replace('.',',') : Math.round(v).toLocaleString('vi-VN'); }
+    $$('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to), dec=+(el.dataset.dec||0), o={v:0};
+      ScrollTrigger.create({trigger:el, start:'top 85%', once:true,
+        onEnter:()=>G.to(o,{v:to, duration:1.8, ease:'power2.out', onUpdate:()=>el.textContent=fmt(o.v,dec)})});
+    });
+
+    /* 03 pinned phrases */
+    const phrases=$$('.phrase'), tl3=G.timeline({scrollTrigger:{trigger:'#s03pin', start:'top top', end:'+=520%', scrub:.5, pin:true}});
+    tl3.to('.s03-q',{opacity:0, scale:.86, ease:'none', duration:.1}, .1);
+    const slot=.8/phrases.length;
+    phrases.forEach((p,i)=>{
+      const t=.14+i*slot;
+      tl3.fromTo(p,{opacity:0, scale:1.45},{opacity:1, scale:1, duration:slot*.5, ease:'power2.out'}, t)
+         .to(p,{opacity:0, scale:.86, duration:slot*.5, ease:'power2.in'}, t+slot*.55);
+    });
+    G.from('.s03-out p',{y:40,opacity:0,duration:1,ease:'power3.out',
+      scrollTrigger:{trigger:'.s03-out', start:'top 78%', toggleActions:'play none none reverse'}});
+
+    /* 04 pinned steps */
+    let step=-1;
+    ScrollTrigger.create({id:'s04pin', trigger:'#s04pin', start:'top top', end:'+=420%', pin:true, scrub:.3,
+      onUpdate:self=>{
+        const i=Math.min(4, Math.floor(self.progress*5.001));
+        if(i!==step){ step=i; setStep(i); }
+      }});
+    setStep(0);
+
+    /* 06 crowd: lá nghiêng có gân + cuống */
+    (function(){
+      const cv=$('#crowdCanvas');
+      if(LOWFX || !cv || !window.Path2D){ $('#s06fb').classList.remove('hide'); if(cv)cv.style.display='none'; return; }
+      const ctx=cv.getContext('2d'); let W=0,H=0;
+      function size(){const d=Math.min(2,window.devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+      size(); addEventListener('resize',size);
+      const blade=new Path2D('M150 20 C60 60 40 140 90 200 C150 170 190 90 150 20 Z');
+      const lines=new Path2D('M90 200 Q112 110 150 20 '+
+        'M90 200 Q82 214 72 228 '+
+        'M100 170 L70 150 M108 140 L74 118 M118 110 L86 86 M128 80 L100 58 '+
+        'M104 160 L140 150 M112 128 L150 116 M122 96 L158 84 M132 64 L162 52');
+      function sample(path, mode, step){
+        const c=document.createElement('canvas'); c.width=c.height=240;
+        const x=c.getContext('2d');
+        if(mode==='fill') x.fill(path); else { x.lineWidth=2.2; x.stroke(path); }
+        const d=x.getImageData(0,0,240,240).data, out=[];
+        for(let y=0;y<240;y+=step)for(let xx=0;xx<240;xx+=step){
+          if(d[(y*240+xx)*4+3]>40) out.push([xx-120+(Math.random()*2-1), y-120+(Math.random()*2-1)]);
+        }
+        for(let i=out.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[out[i],out[j]]=[out[j],out[i]];}
+        return out;
+      }
+      const edge=sample(lines,'stroke',3).concat(sample(blade,'stroke',5));
+      const inner=sample(blade,'fill',6);
+      const N=240, targets=[];
+      for(let i=0;i<N;i++) targets.push(i<150 ? edge[i%edge.length] : inner[(i*37)%Math.max(1,inner.length)]);
+      const parts=[];
+      for(let i=0;i<N;i++){
+        const a=Math.random()*Math.PI*2, r=50+Math.random()*190;
+        parts.push({a,r,sp:.25+Math.random()*.6, tx:targets[i][0], ty:targets[i][1],
+          rad:1.3+Math.random()*1.9, sand:i%8===0});
+      }
+      const words=[$('.w1'),$('.w2'),$('.w3')];
+      function win(p,c,a,b,f){ if(!c)return; G.set(c,{opacity: p<a||p>b ? 0 : Math.max(0,Math.min(1,(p-a)/f,(b-p)/f))}); }
+      let prog=0, raf=0;
+      ScrollTrigger.create({trigger:'#s06pin', start:'top top', end:'+=340%', pin:true, scrub:.4, onUpdate:s=>{prog=s.progress;}});
+      function frame(t){
+        raf=requestAnimationFrame(frame);
+        const p=prog;
+        ctx.clearRect(0,0,W,H);
+        const cx=W*.5, cy=H*.46, S=Math.min(W,H)/290;
+        const vis = p<.14?1 : p<.3?10 : p<.46?100 : Math.round(100+(p-.46)/.54*(N-100));
+        const m=Math.max(0,(p-.58)/.42), mm=m*m*(3-2*m);
+        for(let i=0;i<vis;i++){
+          const q=parts[i], ang=q.a+t*.0002*q.sp;
+          const hx=Math.cos(ang)*q.r, hy=Math.sin(ang)*q.r*.72;
+          const x=cx+(hx+(q.tx*S-hx)*mm), y=cy+(hy+(q.ty*S-hy)*mm);
+          ctx.globalAlpha=.35+.65*(((i*7919)%97)/97);
+          ctx.fillStyle=q.sand?'#C9B79C':'#4CAF6D';
+          ctx.beginPath(); ctx.arc(x,y,q.rad*(1+mm*.5),0,6.2832); ctx.fill();
+        }
+        if(mm>.75){
+          const a=(mm-.75)/.25*.55;
+          ctx.save(); ctx.translate(cx,cy); ctx.scale(S,S); ctx.translate(-120,-120);
+          ctx.strokeStyle='#4CAF6D'; ctx.lineWidth=1/S; ctx.globalAlpha=a; ctx.stroke(blade);
+          ctx.globalAlpha=a*.8; ctx.stroke(lines);
+          ctx.restore();
+        }
+        ctx.globalAlpha=1;
+        win(p,words[0],0,.3,.06); win(p,words[1],.26,.6,.06); win(p,words[2],.55,1.1,.06);
+        $('#s06n').textContent = p<.14?'1':p<.3?'10':p<.46?'100':(vis>=N?'∞':vis);
+      }
+      ScrollTrigger.create({trigger:'#s06', start:'top bottom', end:'bottom top',
+        onEnter:()=>{if(!raf)raf=requestAnimationFrame(frame);},
+        onLeave:()=>{cancelAnimationFrame(raf);raf=0;},
+        onEnterBack:()=>{if(!raf)raf=requestAnimationFrame(frame);},
+        onLeaveBack:()=>{cancelAnimationFrame(raf);raf=0;}});
+    })();
+
+    /* 07 gate + reveal */
+    const tlg=G.timeline({scrollTrigger:{trigger:'#gate', start:'top top', end:'+=130%', scrub:.4, pin:true}});
+    tlg.from('.gate-k',{opacity:0, y:24, duration:.25})
+       .from('.gate-t',{opacity:0, y:34, duration:.35},'-=.05')
+       .to('.gate-line',{height:52, duration:.25},'-=.1')
+       .to({},{duration:.5})
+       .to('#gate',{yPercent:-100, ease:'power2.in', duration:.45});
+    G.from('#posterTilt',{y:90, opacity:0, duration:1.1, ease:'power3.out',
+      scrollTrigger:{trigger:'.s07-show', start:'top 72%', toggleActions:'play none none reverse'}});
+    G.from('.s07-meta',{opacity:0, y:30, stagger:.15, duration:.9,
+      scrollTrigger:{trigger:'.s07-show', start:'top 70%', toggleActions:'play none none reverse'}});
+
+    /* 08 meanings */
+    G.fromTo('#mean1',{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)', duration:1.1, ease:'power3.inOut',
+      scrollTrigger:{trigger:'#mean1', start:'top 82%', toggleActions:'play none none reverse'}});
+    G.from('#mean2',{y:70, opacity:0, rotate:.6, duration:1, ease:'power3.out',
+      scrollTrigger:{trigger:'#mean2', start:'top 82%', toggleActions:'play none none reverse'}});
+    G.from('#mean3',{scale:.92, opacity:0, transformOrigin:'left center', duration:1, ease:'back.out(1.4)',
+      scrollTrigger:{trigger:'#mean3', start:'top 82%', toggleActions:'play none none reverse'}});
+    G.from('.s08-close',{x:-40,opacity:0,duration:.9, scrollTrigger:{trigger:'.s08-close', start:'top 85%', toggleActions:'play none none reverse'}});
+
+    /* final */
+    G.utils.toArray('.fin-big .ln').forEach((ln,i)=>{
+      G.fromTo(ln.querySelector('.lni'),{yPercent:115},{yPercent:0, duration:1.1, ease:'power4.out', delay:i*.1,
+        scrollTrigger:{trigger:'.fin-big', start:'top 82%', toggleActions:'play none none reverse'}});
+    });
+    G.to('#finSun',{scale:1, ease:'none', scrollTrigger:{trigger:'#final', start:'top 80%', end:'top top', scrub:true}});
+  }
+}
+
+/* ---------- ambient canvas (opening) ---------- */
+(function(){
+  const cv=$('#ambient'); if(!cv) return;
+  const ctx=cv.getContext('2d'); let W,H,raf;
+  function size(){W=cv.clientWidth;H=cv.clientHeight;cv.width=W;cv.height=H;}
+  size(); addEventListener('resize',size);
+  const dots=Array.from({length:36},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:.8+Math.random()*2.4,vx:(Math.random()-.5)*.2,vy:-.1-Math.random()*.3,a:.1+Math.random()*.3,
+    c:Math.random()<.2?'201,183,156':'76,175,109'}));
+  function frame(){
+    raf=requestAnimationFrame(frame);
+    ctx.clearRect(0,0,W,H);
+    dots.forEach(d=>{
+      d.x+=d.vx; d.y+=d.vy;
+      if(d.y<-10){d.y=H+10;d.x=Math.random()*W;}
+      ctx.fillStyle='rgba('+d.c+','+d.a+')';
+      ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,7);ctx.fill();
+    });
+  }
+  if(!REDUCED) raf=requestAnimationFrame(frame);
+})();
+
+/* ---------- Three.js earth (final) ---------- */
+(function(){
+  if(LOWFX || !window.THREE){ $('#finLeaf').style.display='block'; $('#earthCanvas').style.display='none'; return; }
+  let inited=false;
+  function init(){
+    if(inited) return; inited=true;
+    const cv=$('#earthCanvas'), w=cv.clientWidth, h=cv.clientWidth;
+    const renderer=new THREE.WebGLRenderer({canvas:cv, alpha:true, antialias:true});
+    renderer.setSize(w,h); renderer.setPixelRatio(Math.min(2,devicePixelRatio));
+    const scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(42,1,.1,100); cam.position.z=3;
+    const N=1400, pos=new Float32Array(N*3), col=new Float32Array(N*3);
+    const cA=new THREE.Color('#4CAF6D'), cB=new THREE.Color('#C9B79C');
+    for(let i=0;i<N;i++){
+      const y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), th=i*2.39996;
+      pos[i*3]=Math.cos(th)*r; pos[i*3+1]=y; pos[i*3+2]=Math.sin(th)*r;
+      const c=i%9===0?cB:cA; col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+    const pts=new THREE.Points(geo,new THREE.PointsMaterial({size:.028,vertexColors:true,transparent:true,opacity:.95}));
+    const group=new THREE.Group(); group.add(pts); scene.add(group);
+    let mx=0,my=0;
+    addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5; my=e.clientY/innerHeight-.5;});
+    let raf, running=false;
+    function frame(){
+      if(!running) return; raf=requestAnimationFrame(frame);
+      group.rotation.y+=.0016;
+      group.rotation.x += ((my*.3)-group.rotation.x)*.04;
+      group.rotation.z += ((mx*.2)-group.rotation.z)*.04;
+      renderer.render(scene,cam);
+    }
+    ScrollTrigger.create({trigger:'#final', start:'top 110%', end:'bottom top',
+      onEnter:()=>{if(!running){running=true;frame();}},
+      onLeave:()=>{running=false;cancelAnimationFrame(raf);},
+      onEnterBack:()=>{if(!running){running=true;frame();}},
+      onLeaveBack:()=>{running=false;cancelAnimationFrame(raf);}});
+  }
+  ScrollTrigger.create({trigger:'#final', start:'top 160%', once:true, onEnter:init});
+})();
+
+/* ---------- custom cursor ---------- */
+if(HOVERABLE && !REDUCED && G){
+  document.documentElement.classList.add('has-cursor');
+  const dot=$('#curDot'), ring=$('#curRing'), label=$('#curLabel');
+  const dx=G.quickTo(dot,'x',{duration:.09,ease:'power2'}), dy=G.quickTo(dot,'y',{duration:.09,ease:'power2'});
+  const rx=G.quickTo(ring,'x',{duration:.34,ease:'power3'}), ry=G.quickTo(ring,'y',{duration:.34,ease:'power3'});
+  let shown=false;
+  addEventListener('pointermove', e=>{
+    if(!shown){shown=true;G.to([dot,ring],{opacity:1,duration:.3});}
+    dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY);
+  });
+  document.documentElement.addEventListener('mouseleave', ()=>{shown=false;G.to([dot,ring],{opacity:0,duration:.3});});
+  G.set([dot,ring],{xPercent:-50,yPercent:-50});
+  document.addEventListener('mouseover', e=>{
+    const t=e.target.closest('[data-cursor],a,button');
+    if(!t){ G.to(ring,{scale:1,duration:.3}); ring.classList.remove('labeled'); return; }
+    const k=t.dataset.cursor || 'CLICK';
+    label.textContent=k; ring.classList.add('labeled');
+    G.to(ring,{scale: k==='VIEW'?2.6 : k==='EXPLORE'?2 : 1.6, duration:.35, ease:'power2.out'});
+  });
+  addEventListener('pointerdown', ()=>G.to(dot,{scale:2.2,duration:.15}));
+  addEventListener('pointerup', ()=>G.to(dot,{scale:1,duration:.2}));
+}else{
+  const d=$('#curDot'), r=$('#curRing'); if(d)d.remove(); if(r)r.remove();
+}
+})();
+</script>
+</body>
+</html>
